@@ -1,85 +1,53 @@
-import java.io.*;
-import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-public class Main {
-  static class InputReader {
-    public BufferedReader reader;
-    public StringTokenizer tokenizer;
+public class StringMatching {
 
-    public InputReader(InputStream stream) {
-      reader = new BufferedReader(new InputStreamReader(stream), 32768);
-      tokenizer = null;
+  public static void main(String[] args) throws IOException {
+
+    BufferedReader bufferedReader =
+        new BufferedReader(new InputStreamReader(System.in));
+
+    String substring = bufferedReader.readLine();
+    String fullString = bufferedReader.readLine();
+
+    if (substring.length() > fullString.length()) {
+      return;
     }
 
-    public String next() {
-      while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-        try {
-          tokenizer = new StringTokenizer(reader.readLine());
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      }
-      return tokenizer.nextToken();
-    }
+    int BASE = 237;
 
-    public int nextInt() { return Integer.parseInt(next()); }
-  }
+    long hashSubstring = 0;
+    long hashFullString = 0;
+    long h = 1;
 
-  public static int upper_bound(int x[], int n, int v) {
-    int l = 1, r = n;
-    int mid, ret = n + 1;
-    while (l <= r) {
-      mid = (l + r) / 2;
-      if (x[mid] > v) {
-        ret = mid;
-        r = mid - 1;
-      } else {
-        l = mid + 1;
-      }
-    }
-    return ret;
-  }
-
-  public static void main(String[] args) {
-    InputReader inputReader = new InputReader(System.in);
-    int n = inputReader.nextInt();
-    int[] x = new int[n + 2];
-    int[] y = new int[n + 2];
-    int[] z = new int[n + 2];
-    int[] pre = new int[n + 2];
-
-    for (int i = 1; i <= n; i++) {
-      x[i] = inputReader.nextInt() + 1;
-    }
-    for (int i = 1; i <= n; i++) {
-      int pos = upper_bound(y, n, -x[i]);
-      y[pos] = -x[i];
-      z[pos] = i;
-      if (pos > 1)
-        pre[i] = z[pos - 1];
-    }
-
-    int ans = 0;
-    for (int i = 1; i <= n + 1; i++) {
-      if (y[i] == 0) {
-        ans = i - 1;
-        break;
+    for (int i = 0; i < substring.length(); i++) {
+      hashSubstring = hashSubstring * BASE + substring.charAt(i);
+      hashFullString = hashFullString * BASE + fullString.charAt(i);
+      if (i > 0) {
+        h = h * BASE;
       }
     }
 
-    System.out.println(ans);
+    StringBuilder result = new StringBuilder();
 
-    int[] result = new int[ans + 1];
-    int index = ans;
-    int cur = z[ans];
-    while (index > 0) {
-      result[index] = cur;
-      cur = pre[cur];
-      index--;
+    if (hashSubstring == hashFullString) {
+      result.append("0 ");
     }
 
-    for (int i = 1; i <= ans; i++) {
-      System.out.print(result[i] + " ");
+    for (int i = substring.length(); i < fullString.length(); i++) {
+      hashFullString =
+          (hashFullString - fullString.charAt(i - substring.length()) * h) *
+              BASE +
+          fullString.charAt(i);
+      if (hashSubstring == hashFullString) {
+        result.append((i - substring.length() + 1)).append(" ");
+      }
+    }
+
+    if (result.length() > 0) {
+      System.out.print(result.toString());
     }
   }
 }
