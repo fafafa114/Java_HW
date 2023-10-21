@@ -6,12 +6,14 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+  private static final int ARRAY_SIZE = 32768;
+
   static class InputReader {
     private final BufferedReader reader;
     private StringTokenizer tokenizer;
 
     public InputReader(InputStream stream) {
-      reader = new BufferedReader(new InputStreamReader(stream), 32768);
+      reader = new BufferedReader(new InputStreamReader(stream), ARRAY_SIZE);
       tokenizer = null;
     }
 
@@ -26,68 +28,82 @@ public class Main {
       return tokenizer.nextToken();
     }
 
-    public int nextInt() {
-      return Integer.parseInt(next());
-    }
+    public int nextInt() { return Integer.parseInt(next()); }
   }
 
-  public static int findUpperBound(int[] x, int n, int v) {
-    int l = 1;
-    int r = n;
-    int ret = n + 1;
-    while (l <= r) {
-      int mid = (l + r) / 2;
-      if (x[mid] > v) {
-        ret = mid;
-        r = mid - 1;
+  public static int upperBound(int[] lis, int size, int value) {
+    int left = 1;
+    int right = size;
+    int result = size + 1;
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      if (lis[mid] > value) {
+        result = mid;
+        right = mid - 1;
       } else {
-        l = mid + 1;
+        left = mid + 1;
       }
     }
-    return ret;
+    return result;
   }
 
   public static void main(String[] args) {
     InputReader inputReader = new InputReader(System.in);
-    int n = inputReader.nextInt();
-    int[] x = new int[n + 2];
-    int[] y = new int[n + 2];
-    int[] z = new int[n + 2];
-    int[] pre = new int[n + 2];
+    int size = inputReader.nextInt();
+    int[] a = new int[size + 2];
+    int[] lis = new int[size + 2];
+    int[] idx = new int[size + 2];
+    int[] lastPosition = new int[size + 2];
 
-    for (int i = 1; i <= n; i++) {
-      x[i] = inputReader.nextInt() + 1;
+    inputA(a, size, inputReader);
+    calcLIS(lis, idx, lastPosition, a, size);
+    int answer = getAns(lis, size);
+    printAns(lis, idx, lastPosition, answer);
+  }
+
+  private static void inputA(int[] a, int size, InputReader inputReader) {
+    for (int i = 1; i <= size; i++) {
+      a[i] = inputReader.nextInt() + 1;
     }
+  }
 
-    for (int i = 1; i <= n; i++) {
-      int pos = findUpperBound(y, n, -x[i]);
-      y[pos] = -x[i];
-      z[pos] = i;
-      if (pos > 1) {
-        pre[i] = z[pos - 1];
+  private static void calcLIS(int[] lis, int[] idx, int[] lastPosition, int[] a,
+                              int size) {
+    for (int i = 1; i <= size; i++) {
+      int position = upperBound(lis, size, -a[i]);
+      lis[position] = -a[i];
+      idx[position] = i;
+      if (position > 1) {
+        lastPosition[i] = idx[position - 1];
       }
     }
+  }
 
-    int ans = 0;
-    for (int i = 1; i <= n + 1; i++) {
-      if (y[i] == 0) {
-        ans = i - 1;
+  private static int getAns(int[] lis, int size) {
+    int answer = 0;
+    for (int i = 1; i <= size + 1; i++) {
+      if (lis[i] == 0) {
+        answer = i - 1;
         break;
       }
     }
+    return answer;
+  }
 
-    System.out.println(ans);
+  private static void printAns(int[] lis, int[] idx, int[] lastPosition,
+                               int answer) {
+    System.out.println(answer);
 
-    int[] result = new int[ans + 1];
-    int index = ans;
-    int cur = z[ans];
+    int[] result = new int[answer + 1];
+    int index = answer;
+    int current = idx[answer];
     while (index > 0) {
-      result[index] = cur;
-      cur = pre[cur];
+      result[index] = current;
+      current = lastPosition[current];
       index--;
     }
 
-    for (int i = 1; i <= ans; i++) {
+    for (int i = 1; i <= answer; i++) {
       System.out.print(result[i] + " ");
     }
   }
