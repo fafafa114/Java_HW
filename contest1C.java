@@ -4,50 +4,45 @@ import java.io.InputStreamReader;
 
 public class StringMatching {
 
-  public static void main(String[] args) throws IOException {
+  private static final int BASE = 237;
 
+  public static void main(String[] args) throws IOException {
     BufferedReader bufferedReader =
         new BufferedReader(new InputStreamReader(System.in));
 
-    String substring = bufferedReader.readLine();
-    String fullString = bufferedReader.readLine();
+    String pattern = bufferedReader.readLine();
+    String text = bufferedReader.readLine();
 
-    if (substring.length() > fullString.length()) {
+    findPositions(pattern, text);
+  }
+
+  private static void findPositions(String pattern, String text) {
+    if (pattern.length() > text.length()) {
       return;
     }
 
-    int BASE = 237;
-
-    long hashSubstring = 0;
-    long hashFullString = 0;
+    long hashPattern = 0;
+    long hashText = 0;
     long h = 1;
 
-    for (int i = 0; i < substring.length(); i++) {
-      hashSubstring = hashSubstring * BASE + substring.charAt(i);
-      hashFullString = hashFullString * BASE + fullString.charAt(i);
+    for (int i = 0; i < pattern.length(); i++) {
+      hashPattern = hashPattern * BASE + pattern.charAt(i);
+      hashText = hashText * BASE + text.charAt(i);
       if (i > 0) {
         h = h * BASE;
       }
     }
 
-    StringBuilder result = new StringBuilder();
-
-    if (hashSubstring == hashFullString) {
-      result.append("0 ");
+    if (hashPattern == hashText) {
+      System.out.print("0 ");
     }
 
-    for (int i = substring.length(); i < fullString.length(); i++) {
-      hashFullString =
-          (hashFullString - fullString.charAt(i - substring.length()) * h) *
-              BASE +
-          fullString.charAt(i);
-      if (hashSubstring == hashFullString) {
-        result.append((i - substring.length() + 1)).append(" ");
+    for (int i = pattern.length(); i < text.length(); i++) {
+      hashText = (hashText - text.charAt(i - pattern.length()) * h) * BASE +
+                 text.charAt(i);
+      if (hashPattern == hashText) {
+        System.out.print((i - pattern.length() + 1) + " ");
       }
-    }
-
-    if (result.length() > 0) {
-      System.out.print(result.toString());
     }
   }
 }
