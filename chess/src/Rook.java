@@ -1,9 +1,11 @@
 import java.util.Map;
 import java.util.TreeMap;
+
 public class Rook extends Piece {
     public Rook(Position position, Board board, boolean isBlack) {
         super(PieceType.ROOK, position, board, isBlack);
     }
+
     @Override
     public boolean canMoveTo(int endX, int endY) {
         Position position = this.getPosition();
@@ -24,15 +26,12 @@ public class Rook extends Piece {
             treeMap = board.rows.get(key);
             small = Math.min(startY, endY);
             big = Math.max(startY, endY);
-        }
-
-        else if (endY == startY) {
+        } else if (endY == startY) {
             key = startY;
             treeMap = board.columns.get(key);
             small = Math.min(startX, endX);
             big = Math.max(startX, endX);
-        }
-        else {
+        } else {
             return false;
         }
 

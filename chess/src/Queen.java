@@ -1,8 +1,8 @@
 public class Queen extends Piece {
-    public Queen(Position position,Board board, boolean isBlack) {
-
+    public Queen(Position position, Board board, boolean isBlack) {
         super(PieceType.QUEEN, position, board, isBlack);
     }
+
     public boolean canMoveTo(int endX, int endY) {
         Position position = this.getPosition();
         int startX = position.getX();

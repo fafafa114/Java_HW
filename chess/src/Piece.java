@@ -10,21 +10,22 @@ public abstract class Piece {
         this.position = position;
         this.board = board;
     }
+
     public PieceType getType() {
         return type;
     }
+
     public boolean isBlack() {
         return isBlack;
     }
+
     public Position getPosition() {
         return position;
     }
+
     public void setPosition(Position position) {
         this.position = position;
     }
+
     public abstract boolean canMoveTo(int endX, int endY);
-//    {
-//        throw new UnsupportedOperationException();
-//        return false;
-//    }
 }

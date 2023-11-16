@@ -4,13 +4,12 @@ public class Bishop extends Piece {
     public Bishop(Position position, Board board, boolean isBlack) {
         super(PieceType.BISHOP, position, board, isBlack);
     }
+
     @Override
     public boolean canMoveTo(int endX, int endY) {
-
         Position position = this.getPosition();
         int startX = position.getX();
         int startY = position.getY();
-
         int smallX = Math.min(startX, endX);
         int bigX = Math.max(startX, endX);
         if (endX == startX && endY == startY) {
@@ -21,18 +20,16 @@ public class Bishop extends Piece {
         if (endX - endY == startX - startY) {
             key = endX - endY;
             treeMap = board.diagonalLeftToRight.get(key);
-        }
-        else if (endX + endY == startX + startY) {
+        } else if (endX + endY == startX + startY) {
             key = endX + endY;
             treeMap = board.diagonalRightToLeft.get(key);
-        }
-        else {
+        } else {
             return false;
         }
         if (treeMap == null) {
             throw new NullPointerException();
         }
-        Integer ceilX = treeMap.ceilingKey(smallX+1);
+        Integer ceilX = treeMap.ceilingKey(smallX + 1);
         return ceilX == null || ceilX >= bigX;
     }
 }
