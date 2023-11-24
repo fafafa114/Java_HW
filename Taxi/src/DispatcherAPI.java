@@ -1,7 +1,7 @@
 public interface DispatcherAPI {
     void addTaxi(TaxiAPI taxiAPI);
 
-    void orderCompleted(TaxiAPI taxiAPI);
+    void placeOrder(TaxiAPI taxiAPI);
 
     boolean isRunning();
 }

@@ -26,7 +26,7 @@ public class Taxi implements TaxiAPI, Runnable {
                         wait();
                     }
                     if (hasOrder) {
-                        fulfillOrder(currentOrder);
+                        placeOrder(currentOrder);
                         hasOrder = false;
                     } else {
                         break;
@@ -38,15 +38,16 @@ public class Taxi implements TaxiAPI, Runnable {
         }
     }
 
-    public synchronized void fulfillOrder(String order) {
+    @Override
+    public synchronized void placeOrder(String order) {
         this.currentOrder = order;
-        System.out.println(name + " is fulfilling order: " + order);
+        System.out.println(name + " is fulfilling: " + order);
         try {
             Thread.sleep(minSleep + random.nextInt(maxSleep - minSleep));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        dispatcherAPI.orderCompleted(this);
+        dispatcherAPI.placeOrder(this);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class TaxiTest {
         dispatcherThread.start();
         List<Thread> taxiThreads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            Taxi taxi = new Taxi("Taxi " + i, dispatcher, 100, 500, random);
+            Taxi taxi = new Taxi("Taxi #" + i, dispatcher, 100, 500, random);
             dispatcher.addTaxi(taxi);
             Thread taxiThread = new Thread(taxi);
             taxiThreads.add(taxiThread);
