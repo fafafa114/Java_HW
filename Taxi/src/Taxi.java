@@ -47,7 +47,7 @@ public class Taxi implements TaxiAPI, Runnable {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        dispatcherAPI.placeOrder(this);
+        dispatcherAPI.addTaxi(this);
     }
 
     @Override

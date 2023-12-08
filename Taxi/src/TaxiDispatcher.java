@@ -9,7 +9,7 @@ public class TaxiDispatcher implements DispatcherAPI, Runnable {
     private final Random random;
     private volatile boolean keepRunning = true;
     private static final AtomicInteger orderCount = new AtomicInteger(0);
-    private static final int MAX_ORDERS = 50;
+    private static final int MAX_ORDERS = 200;
 
     public TaxiDispatcher(Random random) {
         this.random = random;
@@ -20,8 +20,8 @@ public class TaxiDispatcher implements DispatcherAPI, Runnable {
             try {
                 Taxi taxi = availableTaxis.take();
                 String order = "Order #" + (orderCount.incrementAndGet());
-                taxi.receiveOrder(order);
-
+//                taxi.receiveOrder(order);
+                placeOrder(taxi, order);
                 if (orderCount.get() >= MAX_ORDERS) {
                     keepRunning = false;
                 } else {
@@ -40,16 +40,16 @@ public class TaxiDispatcher implements DispatcherAPI, Runnable {
         }
     }
 
-    @Override
-    public void addTaxi(TaxiAPI taxiAPI) {
-        availableTaxis.add((Taxi) taxiAPI);
-    }
 
     @Override
-    public void placeOrder(TaxiAPI taxiAPI) {
+    public void addTaxi(TaxiAPI taxiAPI) {
         if (keepRunning) {
             availableTaxis.add((Taxi) taxiAPI);
         }
+    }
+    @Override
+    public void placeOrder(Taxi taxi, String order) {
+        taxi.receiveOrder(order);
     }
 
     @Override
